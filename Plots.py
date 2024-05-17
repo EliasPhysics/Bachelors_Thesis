@@ -29,7 +29,6 @@ plt.figure(figsize=(6, 6))
 plt.plot(x_values, y_values, label='Zahn Funktion')
 plt.xlabel('x')
 plt.ylim(0, 1)  # Setting the y-axis limits to match the function's range
-plt.legend()
 plt.grid(True)
 plt.savefig("Tooth_Plot")
 

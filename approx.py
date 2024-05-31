@@ -7,7 +7,7 @@ from mpl_toolkits.axes_grid1.inset_locator import inset_axes, mark_inset
 from tqdm import tqdm
 
 def approximate(f,layers,width):
-    x_train = np.linspace(0, 1, 1000)
+    x_train = np.linspace(0, 1, 10000)
     y_train = f(x_train)
     # Neural network model
     model = Sequential()
@@ -59,31 +59,35 @@ def f3(x):
 
 if __name__ == '__main__':
     functions = [f1,f2,f3]
-    widths = [5 + i for i in range(30)]
+    widths = [1 + i for i in range(30)]
     for f in functions:
         mean_list = np.array([])
         std_list = np.array([])
         for w in tqdm(widths):
-            error_list, mean, std = test_approx(n=10, f=f, layers=5, width=w)
+            error_list, mean, std = test_approx(n=10, f=f, layers=2, width=w)
             mean_list = np.append(mean_list, mean)
             std_list = np.append(std_list, std)
-            np.save(f"Data/variable_layers_means_{f.__name__}", mean_list)
-            np.save(f"Data/variable_layers_std_{f.__name__}", std_list)
-        plt.errorbar(widths, mean_list, yerr=std_list, fmt='o', capsize=5, capthick=2, ecolor='red', linestyle='None')
+            np.save(f"Data/variable_widths_means_{f.__name__}", mean_list)
+            np.save(f"Data/variable_widths_std_{f.__name__}", std_list)
+            tf.keras.backend.clear_session()
+        plt.errorbar(widths, mean_list, yerr=std_list/2, fmt='o', capsize=5, capthick=2, ecolor='red', linestyle='None')
+        plt.yscale("log")
         plt.savefig(f"variable_widths_{f.__name__}.svg")
         plt.show()
 
-    layers = [5 + i for i in range(30)]
+    layers = [1 + i for i in range(30)]
     for f in functions:
         mean_list = np.array([])
         std_list = np.array([])
         for l in tqdm(layers):
-            error_list, mean, std = test_approx(n=10, f=f, layers=l, width=5)
+            error_list, mean, std = test_approx(n=10, f=f, layers=l, width=2)
             mean_list = np.append(mean_list,mean)
             std_list = np.append(std_list,std)
             np.save(f"Data/variable_layers_means_{f.__name__}", mean_list)
             np.save(f"Data/variable_layers_std_{f.__name__}", std_list)
-        plt.errorbar(layers, mean_list, yerr=std_list, fmt='o', capsize=5, capthick=2, ecolor='red', linestyle='None')
+            tf.keras.backend.clear_session()
+        plt.errorbar(layers, mean_list, yerr=std_list/2, fmt='o', capsize=5, capthick=2, ecolor='red', linestyle='None')
+        plt.yscale("log")
         plt.savefig(f"variable_layers_{f.__name__}.svg")
         plt.show()
 

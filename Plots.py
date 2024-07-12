@@ -30,7 +30,7 @@ plt.plot(x_values, y_values, label='Zahn Funktion')
 plt.xlabel('x')
 plt.ylim(0, 1)  # Setting the y-axis limits to match the function's range
 plt.grid(True)
-plt.savefig("Tooth_Plot")
+plt.savefig("tooth_plot.pdf")
 
 
 def double_tooth_function(x):
@@ -62,6 +62,6 @@ plt.plot(x_values, y_values)
 plt.xlabel('x')
 plt.ylim(0, 1)  # Ensuring y-axis limits match the function's range
 plt.legend()
-plt.grid(True)
-plt.savefig("Quad_tooth_Plot")
+plt.savefig("quad_tooth_plot.pdf")
+plt.show()
 # The function calls in the block are commented to adhere to the policy. They will be uncommented in the final code.

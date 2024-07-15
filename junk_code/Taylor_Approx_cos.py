@@ -38,12 +38,11 @@ plt.xlabel('x')
 plt.ylabel('y')
 plt.axhline(0, color='black',linewidth=0.5)
 plt.axvline(0, color='black',linewidth=0.5)
-plt.grid(color = 'gray', linestyle = '--', linewidth = 0.5)
 plt.legend()
 plt.ylim([-1.1,1.1])
 plt.xticks([-np.pi, -np.pi/2, 0, np.pi/2, np.pi], ['$-\pi$', '$-\pi/2$', '$0$', '$\pi/2$', '$\pi$'])
 plt.yticks([-1, 0, 1])
 
 # Show the plot
-plt.savefig('Taylor_Approximation_cos.pdf')
+plt.savefig('Plots/Taylor_Approximation_cos.pdf')
 plt.show()

@@ -2,7 +2,7 @@ import os
 
 import matplotlib.pyplot as plt
 import numpy as np
-from bin.approx import f1,f2,f3
+from bin.scaling_laws import f1,f2,f3
 
 
 

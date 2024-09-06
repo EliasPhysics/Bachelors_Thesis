@@ -94,7 +94,7 @@ def _extract_first_number(string):
     return int(match.group()) if match else None
 
 
-def _sort_lists(list1, list2):
+def _sort_lists(list1, list2, std = None , min = None):
     # Create a list of tuples, where each tuple contains the index and value from list1
     indexed_list1 = list(enumerate(list1))
 
@@ -104,11 +104,13 @@ def _sort_lists(list1, list2):
     # Extract the sorted indices
     sorted_indices = [index for index, value in sorted_indexed_list1]
 
+
     # Use the sorted indices to reorder both lists
     sorted_list1 = [list1[i] for i in sorted_indices]
     sorted_list2 = [list2[i] for i in sorted_indices]
-
-    return sorted_list1, sorted_list2
+    std_sorted = [std[i] for i in sorted_indices]
+    min_sorted = [min[i] for i in sorted_indices]
+    return sorted_list1, sorted_list2, std_sorted, min_sorted
 
 
 import matplotlib.pyplot as plt
@@ -122,62 +124,76 @@ def eval_results(dir, functions):
     for func in functions:
         max_error_list_files_f = [f for f in max_error_list_files if f"{func.__name__}" in f]
         error_list_files_f = [f for f in error_list_files if f"{func.__name__}" in f]
-        error_data_f = []
-        max_error_data_f = []
+        error_data_f_mean = []
+        max_error_data_f_mean = []
+
+        max_error_data_f_min = []
+        max_error_data_f_std = []
+
+        error_data_f_min = []
+        error_data_f_std = []
         n_layers = []
         n_layers_max = []
 
         for file in max_error_list_files_f:
             data = np.load("Data/" + file)
-            max_error_data_f.append(min(data))
+            max_error_data_f_min.append(min(data))
+            max_error_data_f_mean.append(np.mean(data))
+            max_error_data_f_std.append(np.std(data))
             layers = _extract_first_number(file)
             n_layers_max.append(layers)
-            print(n_layers_max, max_error_data_f)
 
-        layers_sorted_max, max_error_sorted = _sort_lists(n_layers_max, max_error_data_f)
+        layers_sorted_max, max_error_sorted, max_error_std_sorted, max_error_min_sorted= _sort_lists(n_layers_max, max_error_data_f_mean, std = max_error_data_f_std, min =  max_error_data_f_min)
+
 
         for file in error_list_files_f:
             data = np.load("Data/" + file)
-            error_data_f.append(min(data))
+            error_data_f_min.append(min(data))
+            error_data_f_mean.append(np.mean(data))
+            error_data_f_std.append(np.std(data))
             layers = _extract_first_number(file)
             n_layers.append(layers)
 
-        layers_sorted, error_sorted = _sort_lists(n_layers, error_data_f)
+        layers_sorted, error_sorted,error_std_sorted,error_min_sorted = _sort_lists(n_layers, error_data_f_mean,min=error_data_f_min,std=error_data_f_std)
 
         # Create a single figure with two subplots
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
 
         # Plot L2 error
-        ax1.plot(layers_sorted_max, max_error_sorted)
+        ax1.plot(layers_sorted_max, max_error_min_sorted)
+        #ax1.errorbar(layers_sorted, max_error_sorted , yerr=np.array(max_error_std_sorted) / 2, fmt='o', capsize=5, capthick=2, ecolor='red',linestyle='None', label="mean")
         ax1.set_title(r"$L_2$-error for " + f"{func.__name__}")
+        ax1.grid()
         ax1.legend()
         # ax1.set_yscale("log")  # Uncomment if you want log scale
 
         # Plot L-infinity error
-        ax2.plot(layers_sorted, error_sorted)
+        ax2.plot(layers_sorted, error_min_sorted)
+        #ax2.errorbar(layers_sorted, error_sorted, yerr=np.array(error_std_sorted) / 2, fmt='o', capsize=5, capthick=2,ecolor='red',linestyle='None', label="mean")
         ax2.set_title(r"$L_\infty$-error for " + f"{func.__name__}")
         ax2.legend()
         # ax2.set_yscale("log")  # Uncomment if you want log scale
 
         # Adjust layout and save figure
         plt.tight_layout()
-        plt.savefig(f"Plots/error_constant_params_{func.__name__}_plot")
+        ax2.grid()
+        plt.savefig(f"Plots/error_constant_params_{func.__name__}_plot.pdf")
         #plt.close()
         plt.show()
 
 functions = [f1,f2,f3]
 
 def data_generation_run():
-    model(layers=5, width=5, f=f1, plot=True)
+    #model(layers=5, width=5, f=f1, plot=True)
     for f in functions:
-        test_model(layers=12, width=3, f=f, n=50)
-        test_model(layers=7, width=4, f=f, n=30)
-        test_model(layers=5, width=5, f=f, n=15)
-        test_model(layers=3, width=7, f=f, n=15)
-        test_model(layers=2, width=10, f=f, n=15)
+       # test_model(layers=12, width=3, f=f, n=50)
+      #  test_model(layers=7, width=4, f=f, n=30)
+       # test_model(layers=5, width=5, f=f, n=15)
+        #test_model(layers=3, width=7, f=f, n=15)
+       # test_model(layers=2, width=10, f=f, n=15)
         test_model(layers=1, width=45, f=f, n=15)
 
 if __name__ == "__main__":
     os.chdir("..")
-   # data_generation_run()
+    data_generation_run()
     eval_results(dir="Data",functions=functions)

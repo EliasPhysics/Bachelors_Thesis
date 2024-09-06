@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import os
 
 # Define the sigmoid function
 def sigma(x):
@@ -19,6 +20,7 @@ def g(x):
     - The evaluated result(s) according to the piecewise function definition.
     """
     return np.where(x < 0.5, 2 * x, 2 * (1 - x))
+
 
 # Create x values
 x = np.linspace(0, 1.2, 400)
@@ -41,5 +43,6 @@ plt.ylabel('y')
 plt.legend()
 plt.ylim(-1.5, 2)
 plt.xlim(0,1)
-plt.savefig("Plots/sawtooth_explanation_plot.pdf")
+os.chdir("..")
+plt.savefig("Plots/sawtooth_explanation_plot.png")
 plt.show()

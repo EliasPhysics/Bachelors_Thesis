@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -14,22 +15,21 @@ def g_n(x, n):
     Applies the g function n times to create a sawtooth with n teeth.
     """
     y = x.copy()
-    for _ in range(n):
-        y = g(n * y % 1)
+    y = g(n * y % 1)
     return y
 
 x = np.linspace(0, 1, 1000)
 
 plt.figure(figsize=(8, 6))
 plt.plot(x, g_n(x, 1), 'r-', linewidth=2, label='g')
-plt.plot(x, g_n(x, 2), 'g-', linewidth=2, label='g2')
-plt.plot(x, g_n(x, 3), 'y-', linewidth=2, label='g3')
+plt.plot(x, g_n(x, 2), 'g-', linewidth=2, label="g2")
+plt.plot(x, g_n(x, 4), 'y-', linewidth=2, label='g3')
 
 plt.xlim(0, 1)
 plt.ylim(0, 1)
-plt.xlabel('x')
-plt.ylabel('y')
-plt.title('Sawtooth Functions')
+#plt.tight_layout()
 plt.legend()
-plt.grid(True)
+plt.tight_layout()
+os.chdir("..")
+plt.savefig("Plots/x2_approx_explanation_sawtooths.pdf")
 plt.show()

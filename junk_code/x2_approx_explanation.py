@@ -21,14 +21,14 @@ def g_n(x, n):
 x = np.linspace(0, 1, 1000)
 
 plt.figure(figsize=(8, 6))
-plt.plot(x, g_n(x, 1), 'r-', linewidth=2, label='g')
-plt.plot(x, g_n(x, 2), 'g-', linewidth=2, label="g2")
-plt.plot(x, g_n(x, 4), 'y-', linewidth=2, label='g3')
+plt.plot(x, g_n(x, 1), 'r-', linewidth=2, label=r'$g_1$')
+plt.plot(x, g_n(x, 2), 'g-', linewidth=2, label=r"$g_2$")
+plt.plot(x, g_n(x, 4), 'y-', linewidth=2, label=r'$g_3$')
 
 plt.xlim(0, 1)
 plt.ylim(0, 1)
 #plt.tight_layout()
-plt.legend()
+plt.legend(prop={'size': 20})
 plt.tight_layout()
 os.chdir("..")
 plt.savefig("Plots/x2_approx_explanation_sawtooths.pdf")

@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -19,16 +21,15 @@ def piecewise_linear_approx(x, n):
 x = np.linspace(0, 1, 1000)
 
 plt.figure(figsize=(8, 6))
-plt.plot(x, x**2, 'b-', linewidth=2, label='f0')
-plt.plot(x, piecewise_linear_approx(x, 1), 'r-', linewidth=2, label='f1')
-plt.plot(x, piecewise_linear_approx(x, 2), 'g-', linewidth=2, label='f2')
-plt.plot(x, piecewise_linear_approx(x, 4), 'k--', linewidth=2, label='f')
+plt.plot(x, x**2, color="black",linestyle="--", linewidth=2, label=r'$f$')
+plt.plot(x, piecewise_linear_approx(x, 1), 'r-', linewidth=2, label=r'$f_1$')
+plt.plot(x, piecewise_linear_approx(x, 2), 'g-', linewidth=2, label=r'$f_2$')
+plt.plot(x, piecewise_linear_approx(x, 4), 'y-', linewidth=2, label=r'$f_3$')
 
 plt.xlim(0, 1)
 plt.ylim(0, 1)
-plt.xlabel('x')
-plt.ylabel('y')
-plt.title('Piecewise Linear Approximations of x^2')
-plt.legend()
-plt.grid(True)
+plt.tight_layout()
+plt.legend(prop={'size': 20})
+os.chdir("..")
+plt.savefig("Plots/x2_approx_explanation.pdf")
 plt.show()

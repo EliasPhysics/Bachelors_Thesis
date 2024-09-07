@@ -87,16 +87,10 @@ def plot_scaling_laws(f, layers=None, widths=None):
         # Load data from CSV
         df = pd.read_csv(f"Data/error_data_layers_{f.__name__}.csv")
 
-        # Group by layers and calculate statistics
-        grouped = df.groupby('width').agg({
-            'error_list': ['min', 'mean', lambda x: x.std() / 2]
-        }).reset_index()
-        grouped.columns = ['layers', 'min', 'mean', 'std']
-
         # Plot
         plt.figure(figsize=(10, 6))
-        plt.plot(grouped['layers'], grouped['min'], linestyle="-", label="min")
-        plt.errorbar(grouped['layers'], grouped['mean'], yerr=grouped['std'], fmt='o', capsize=5, capthick=2,
+        plt.plot(df['depth'], df['min'], linestyle="-", label="min")
+        plt.errorbar(df['depth'], df['mean'], yerr=df['std']/2, fmt='o', capsize=5, capthick=2,
                      ecolor='red', linestyle='None', label="mean")
         plt.yscale("log")
         plt.title(r"$L_2$-error" + f" for different depths when approximating {f.__name__}")
@@ -112,16 +106,10 @@ def plot_scaling_laws(f, layers=None, widths=None):
         # Load data from CSV
         df = pd.read_csv(f"Data/error_data_width_{f.__name__}.csv")
 
-        # Group by widths and calculate statistics
-        grouped = df.groupby('width').agg({
-            'error_list': ['min', 'mean', lambda x: x.std() / 2]
-        }).reset_index()
-        grouped.columns = ['width', 'min', 'mean', 'std']
-
         # Plot
         plt.figure(figsize=(10, 6))
-        plt.plot(grouped['width'], grouped['min'], linestyle="-", label="min")
-        plt.errorbar(grouped['width'], grouped['mean'], yerr=grouped['std'], fmt='o', capsize=5, capthick=2,
+        plt.plot(df['width'], df['min'], linestyle="-", label="min")
+        plt.errorbar(df['width'], df['mean'], yerr=df['std']/2, fmt='o', capsize=5, capthick=2,
                      ecolor='red', linestyle='None', label="mean")
         plt.yscale("log")
         plt.title(r"$L_2$-error" + f" for different widths when approximating {f.__name__}")
@@ -145,10 +133,10 @@ def f3(x):
 
 if __name__ == '__main__':
     os.chdir("..")
-    functions = [f2, f3]
+    functions = [f1,f2, f3]
     widths = [1 + i for i in range(30)]
 
-    #for f in functions:
+    for f in functions:
     #    error_data = []
     #    max_error_data = []
 
@@ -182,45 +170,45 @@ if __name__ == '__main__':
             # Save DataFrames to CSV
      #       error_df.to_csv(f"Data/error_data_width_{f.__name__}.csv", index=False)
      #       max_error_df.to_csv(f"Data/max_error_data_width_{f.__name__}.csv", index=False)
-        #plot_scaling_laws(f,widths=widths)
+        plot_scaling_laws(f,widths=widths)
 
-    functions = [f2, f3]
+    functions = [f1, f2, f3]
     layers = [1 + i for i in range(13)]
     for f in functions:
-        error_data = []
-        max_error_data = []
-
-        for l in tqdm(layers):
-            error_list, max_error_list = test_approx(n=20, f=f, layers=l, width=4)
-
-            # Append data for error DataFrame
-            error_data.append({
-                'depth': l,
-                'error_list': error_list,
-                'mean': np.mean(error_list),
-                'std': np.std(error_list),
-                'min': np.min(error_list)
-            })
-
-            # Append data for max_error DataFrame
-            max_error_data.append({
-                'depth': l,
-                'max_error_list': max_error_list,
-                'mean': np.mean(max_error_list),
-                'std': np.std(max_error_list),
-                'min': np.min(max_error_list)
-            })
-
-            tf.keras.backend.clear_session()
-
-            # Create DataFrames
-            error_df = pd.DataFrame(error_data)
-            max_error_df = pd.DataFrame(max_error_data)
-
-            # Save DataFrames to CSV
-            error_df.to_csv(f"Data/error_data_layers_{f.__name__}.csv", index=False)
-            max_error_df.to_csv(f"Data/max_error_data_layers_{f.__name__}.csv", index=False)
-        #plot_scaling_laws(f, layers=layers)
+    #     error_data = []
+    #     max_error_data = []
+    #
+    #     for l in tqdm(layers):
+    #         error_list, max_error_list = test_approx(n=20, f=f, layers=l, width=4)
+    #
+    #         # Append data for error DataFrame
+    #         error_data.append({
+    #             'depth': l,
+    #             'error_list': error_list,
+    #             'mean': np.mean(error_list),
+    #             'std': np.std(error_list),
+    #             'min': np.min(error_list)
+    #         })
+    #
+    #         # Append data for max_error DataFrame
+    #         max_error_data.append({
+    #             'depth': l,
+    #             'max_error_list': max_error_list,
+    #             'mean': np.mean(max_error_list),
+    #             'std': np.std(max_error_list),
+    #             'min': np.min(max_error_list)
+    #         })
+    #
+    #         tf.keras.backend.clear_session()
+    #
+    #         # Create DataFrames
+    #         error_df = pd.DataFrame(error_data)
+    #         max_error_df = pd.DataFrame(max_error_data)
+    #
+    #         # Save DataFrames to CSV
+    #         error_df.to_csv(f"Data/error_data_layers_{f.__name__}.csv", index=False)
+    #         max_error_df.to_csv(f"Data/max_error_data_layers_{f.__name__}.csv", index=False)
+        plot_scaling_laws(f, layers=layers)
 
 
 
